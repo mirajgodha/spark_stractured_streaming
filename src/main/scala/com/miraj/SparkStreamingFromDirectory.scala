@@ -6,10 +6,11 @@ import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.functions._
 
 
+
 object SparkStreamingFromDirectory {
 
   def main(args: Array[String]): Unit = {
-    val spark:SparkSession = SparkSession.builder()
+    val spark: SparkSession = SparkSession.builder()
       .master("local[3]")
       .appName("SparkByExample")
       .getOrCreate()
@@ -39,17 +40,27 @@ object SparkStreamingFromDirectory {
 
     val df = spark.readStream
       .schema(schema)
-      .json("file:///data/spark-examples/spark-streaming/src/main/resources/folder_streaming")
+      .json("file:///data/spark_stractured_streaming/src/main/scala/resources/")
 
-val df1 = df.withColumn("timestamp", lit(current_timestamp()))
+    val df1 = df.withColumn("timestamp", lit(current_timestamp()))
     df1.printSchema()
 
-    val groupDF = df1.withWatermark("timestamp", "1 minutes").select("Zipcode","timestamp")
-        .groupBy("Zipcode","timestamp").count()
+    import spark.implicits._
+
+    val groupDF = df1.withWatermark("timestamp", "1 minutes").select("Zipcode", "timestamp")
+      .groupBy( window($"timestamp", "1 minutes", "1 minutes"),$"Zipcode").count()
     groupDF.printSchema()
 
-    groupDF.writeStream.trigger(Trigger.Once).outputMode("append").format("json")
-.option("checkpointLocation", "/tmp/miraj")
+    groupDF.writeStream.trigger(Trigger.Once).outputMode("update").format("json").option("truncate",false)
+      .option("checkpointLocation", "/tmp/miraj")
       .start("file:///data/output")
+
+   /* groupDF.writeStream.trigger(Trigger.Once)
+      .format("console")
+      .outputMode("complete")
+      .option("truncate",false).option("checkpointLocation", "/tmp/miraj")
+      .option("newRows",30)
+      .start()
+      .awaitTermination() */
   }
 }
