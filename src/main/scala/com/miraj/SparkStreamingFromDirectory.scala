@@ -51,10 +51,11 @@ object SparkStreamingFromDirectory {
       .groupBy( window($"timestamp", "1 minutes", "1 minutes"),$"Zipcode").count()
     groupDF.printSchema()
 
-    groupDF.writeStream.trigger(Trigger.Once).outputMode("update").format("json").option("truncate",false)
+    groupDF.writeStream.trigger(Trigger.Once).outputMode("append").format("json").option("truncate",false)
       .option("checkpointLocation", "/tmp/miraj")
       .start("file:///data/output")
 
+    spark.streams.awaitAnyTermination()
    /* groupDF.writeStream.trigger(Trigger.Once)
       .format("console")
       .outputMode("complete")
