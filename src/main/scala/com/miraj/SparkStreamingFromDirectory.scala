@@ -40,7 +40,7 @@ object SparkStreamingFromDirectory {
 
     val df = spark.readStream
       .schema(schema)
-      .json("file:///data/spark_stractured_streaming/src/main/scala/resources/")
+      .json("hdfs://siqhdp01/tmp/miraj/input/")
 
     val df1 = df.withColumn("timestamp", lit(current_timestamp()))
     df1.printSchema()
@@ -52,14 +52,16 @@ object SparkStreamingFromDirectory {
     groupDF.printSchema()
 
     groupDF.writeStream.trigger(Trigger.Once).outputMode("append").format("json").option("truncate",false)
-      .option("checkpointLocation", "/tmp/miraj")
-      .start("file:///data/output")
+      .option("checkpointLocation", "hdfs://siqhdp01/tmp/miraj/checkpoint")
+      .start("hdfs://siqhdp01/tmp/miraj/output")
 
+    println("Active streams: " + spark.streams.active.size)
     spark.streams.awaitAnyTermination()
-   /* groupDF.writeStream.trigger(Trigger.Once)
+    println("Active streams after waitng:" + spark.streams.active.size)
+   /* groupDF.writeStream
       .format("console")
-      .outputMode("complete")
-      .option("truncate",false).option("checkpointLocation", "/tmp/miraj")
+      .outputMode("append")
+      .option("truncate",false).option("checkpointLocation", "hdfs://siqhdp01/tmp/miraj/checkpoint")
       .option("newRows",30)
       .start()
       .awaitTermination() */
