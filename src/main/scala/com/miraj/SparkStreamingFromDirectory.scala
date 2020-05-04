@@ -21,7 +21,7 @@ object SparkStreamingFromDirectory {
       .getOrCreate()
 
     val source: MySource = new MySource
-    spark.sparkContext.setLogLevel("ERROR")
+//    spark.sparkContext.setLogLevel("ERROR")
 
     val chartListener = new StreamingQueryListener() {
       val MaxDataPoints = 100
@@ -29,11 +29,14 @@ object SparkStreamingFromDirectory {
 
       def onQueryStarted(event: QueryStartedEvent) = ()
 
-      def onQueryTerminated(event: QueryTerminatedEvent) = ()
+      def onQueryTerminated(event: QueryTerminatedEvent) = {
+      }
 
       def onQueryProgress(event: QueryProgressEvent) = {
         val queryProgress = event.progress
         // ignore zero-valued events
+        println("----------------" + event.progress)
+        println("----------------" + event.progress.numInputRows)
         if (queryProgress.numInputRows > 0) {
 //          source.FOO_TIMER.update(queryProgress.timestamp.toLong)
           source.FOO_COUNTER.mark( event.progress.numInputRows)
