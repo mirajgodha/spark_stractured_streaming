@@ -1,6 +1,6 @@
 package org.apache.spark.metrics.source
 
-import com.codahale.metrics.{Counter, Histogram, MetricRegistry}
+import com.codahale.metrics.{Counter, Histogram,Meter,Timer ,MetricRegistry}
 
 class MySource extends Source {
   override val sourceName: String = "MySource"
@@ -8,5 +8,6 @@ class MySource extends Source {
   override val metricRegistry: MetricRegistry = new MetricRegistry
 
   val FOO: Histogram = metricRegistry.histogram(MetricRegistry.name("fooHistory"))
-  var FOO_COUNTER: Long =0;
+  val FOO_COUNTER: Meter = metricRegistry.meter(MetricRegistry.name("numInputRows"))
+  val FOO_TIMER: Timer = metricRegistry.timer(MetricRegistry.name("numInputRowsTimer"))
 }

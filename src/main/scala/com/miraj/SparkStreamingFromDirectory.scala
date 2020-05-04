@@ -1,6 +1,7 @@
 package com.miraj
 
 import com.codahale.metrics.{Counter, Histogram, MetricRegistry}
+import org.apache.calcite.avatica.util.TimeUnitRange
 import org.apache.spark.SparkEnv
 import org.apache.spark.metrics.source.MySource
 import org.apache.spark.sql.SparkSession
@@ -34,8 +35,8 @@ object SparkStreamingFromDirectory {
         val queryProgress = event.progress
         // ignore zero-valued events
         if (queryProgress.numInputRows > 0) {
-          val time = queryProgress.timestamp
-          source.FOO_COUNTER = event.progress.numInputRows
+//          source.FOO_TIMER.update(queryProgress.timestamp.toLong)
+          source.FOO_COUNTER.mark( event.progress.numInputRows)
         }
       }
     }
