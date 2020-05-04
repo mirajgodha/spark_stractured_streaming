@@ -1,10 +1,14 @@
 package com.miraj
 
+import com.codahale.metrics.{Counter, Histogram, MetricRegistry}
+import org.apache.spark.SparkEnv
+import org.apache.spark.metrics.source.MySource
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.functions._
-
+import org.apache.spark.sql.streaming.StreamingQueryListener
+import org.apache.spark.sql.streaming.StreamingQueryListener._
 
 
 object SparkStreamingFromDirectory {
@@ -16,6 +20,28 @@ object SparkStreamingFromDirectory {
       .getOrCreate()
 
     spark.sparkContext.setLogLevel("ERROR")
+
+    val chartListener = new StreamingQueryListener() {
+      val MaxDataPoints = 100
+      // a mutable reference to an immutable container to buffer n data points
+
+      def onQueryStarted(event: QueryStartedEvent) = ()
+
+      def onQueryTerminated(event: QueryTerminatedEvent) = ()
+
+      def onQueryProgress(event: QueryProgressEvent) = {
+        val queryProgress = event.progress
+        // ignore zero-valued events
+        if (queryProgress.numInputRows > 0) {
+          val time = queryProgress.timestamp
+          event.progress.numInputRows
+        }
+      }
+    }
+
+    spark.streams.addListener(chartListener)
+    val source: MySource = new MySource
+    SparkEnv.get.metricsSystem.registerSource(source)
 
     val schema = StructType(
       List(
@@ -48,22 +74,28 @@ object SparkStreamingFromDirectory {
     import spark.implicits._
 
     val groupDF = df1.withWatermark("timestamp", "1 minutes").select("Zipcode", "timestamp")
-      .groupBy( window($"timestamp", "1 minutes", "1 minutes"),$"Zipcode").count()
+      .groupBy(window($"timestamp", "1 minutes", "1 minutes"), $"Zipcode").count()
     groupDF.printSchema()
 
-    groupDF.writeStream.trigger(Trigger.Once).outputMode("append").format("json")
+    var a = groupDF.writeStream.trigger(Trigger.Once).outputMode("append").format("json")
       .option("checkpointLocation", "hdfs://siqhdp01/tmp/miraj/checkpoint")
       .start("hdfs://siqhdp01/tmp/miraj/output")
 
-    println("Active streams: " + spark.streams.active.size)
-    spark.streams.awaitAnyTermination()
-    println("Active streams after waitng:" + spark.streams.active.size)
-   /* groupDF.writeStream
-      .format("console")
-      .outputMode("append")
-      .option("truncate",false).option("checkpointLocation", "hdfs://siqhdp01/tmp/miraj/checkpoint")
-      .option("newRows",30)
-      .start()
-      .awaitTermination() */
+
+    println(a.status)
+    println("status: " + a.recentProgress)
+    a.awaitTermination()
+
+    /* groupDF.writeStream
+       .format("console")
+       .outputMode("append")
+       .option("truncate",false).option("checkpointLocation", "hdfs://siqhdp01/tmp/miraj/checkpoint")
+       .option("newRows",30)
+       .start()
+       .awaitTermination() */
   }
 }
+
+
+
+

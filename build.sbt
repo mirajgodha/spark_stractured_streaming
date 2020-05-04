@@ -14,7 +14,7 @@ fork := true
 // Must run Spark tests sequentially because they compete for port 4040!
 parallelExecution in Test := false
 
-val sparkVersion        = "3.0.0-preview2"
+val sparkVersion        = "2.4.5"
 val scalaTestVersion    = "2.12.10"
 val scalaCheckVersion   = "2.12.10"
 
