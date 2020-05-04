@@ -19,6 +19,7 @@ object SparkStreamingFromDirectory {
       .appName("SparkByExample")
       .getOrCreate()
 
+    val source: MySource = new MySource
     spark.sparkContext.setLogLevel("ERROR")
 
     val chartListener = new StreamingQueryListener() {
@@ -34,13 +35,12 @@ object SparkStreamingFromDirectory {
         // ignore zero-valued events
         if (queryProgress.numInputRows > 0) {
           val time = queryProgress.timestamp
-          event.progress.numInputRows
+          source.FOO_COUNTER = event.progress.numInputRows
         }
       }
     }
 
     spark.streams.addListener(chartListener)
-    val source: MySource = new MySource
     SparkEnv.get.metricsSystem.registerSource(source)
 
     val schema = StructType(
