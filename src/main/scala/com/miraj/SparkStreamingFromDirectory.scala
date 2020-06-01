@@ -87,7 +87,7 @@ object SparkStreamingFromDirectory {
     println(a.status)
     println("status: " + a.recentProgress)
     a.awaitTermination()
-    spark.stop()
+//    spark.stop()
 
     /* groupDF.writeStream
        .format("console")
