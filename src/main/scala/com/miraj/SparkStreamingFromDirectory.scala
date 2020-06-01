@@ -68,7 +68,7 @@ object SparkStreamingFromDirectory {
 
     val df = spark.readStream
       .schema(schema)
-      .json("hdfs://siqhdp01/tmp/miraj/input/")
+      .json("hdfs://siq02/tmp/miraj/input/")
 
     val df1 = df.withColumn("timestamp", lit(current_timestamp()))
     df1.printSchema()
@@ -80,8 +80,8 @@ object SparkStreamingFromDirectory {
     groupDF.printSchema()
 
     var a = groupDF.writeStream.trigger(Trigger.Once).outputMode("append").format("json")
-      .option("checkpointLocation", "hdfs://siqhdp01/tmp/miraj/checkpoint")
-      .start("hdfs://siqhdp01/tmp/miraj/output")
+      .option("checkpointLocation", "hdfs://siq02/tmp/miraj/checkpoint")
+      .start("hdfs://siq02/tmp/miraj/output")
 
 
     println(a.status)
