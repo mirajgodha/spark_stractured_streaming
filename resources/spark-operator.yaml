@@ -12,9 +12,9 @@ spec:
   template:
     type: Scala
     mode: cluster
-    image: "mirajgodha/spark:latest"
-    #imagePullPolicy: IfNotPresent
-    imagePullPolicy: Always
+    image: "artifacts.ggn.in.guavus.com:4244/spark:2.4.5"
+    imagePullPolicy: IfNotPresent
+    #imagePullPolicy: Always
     mainClass: com.miraj.SparkStreamingFromDirectory
     mainApplicationFile: "hdfs://siq02/tmp/miraj/siq_2.12-6.0.0.jar"
     arguments: ['miraj', 'miraj1', '1580803200']
@@ -55,7 +55,7 @@ spec:
       exposeExecutorMetrics: true
       #metricsPropertiesFile: "/opt/spark/work-dir/config1/metrics.properties"
       prometheus:
-        jmxExporterJar: "/opt/spark/examples/jars/jmx_prometheus_javaagent-0.11.0.jar"
+        jmxExporterJar: "/opt/spark/jars/jmx_prometheus_javaagent-0.11.0.jar"
         port: 7079
         configFile: "/opt/spark/work-dir/config/prometheus.yaml"
     hadoopConf:
@@ -66,4 +66,4 @@ spec:
       "dfs.client.failover.proxy.provider.siq02": "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
     sparkConf:
       "spark.ui.port": "4049"
-      "spark.eventLog.enabled": "true"
+      #"spark.eventLog.enabled": "true"
