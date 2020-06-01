@@ -16,8 +16,6 @@ object SparkStreamingFromDirectory {
 
   def main(args: Array[String]): Unit = {
     val spark: SparkSession = SparkSession.builder()
-      .master("local[3]")
-      .appName("SparkByExample")
       .getOrCreate()
 
     val source: MySource = new MySource
@@ -37,9 +35,9 @@ object SparkStreamingFromDirectory {
         // ignore zero-valued events
         println("----------------" + event.progress)
         println("----------------" + event.progress.numInputRows)
-        if (queryProgress.numInputRows > 0) {
+          if (queryProgress.numInputRows > 0) {
 //          source.FOO_TIMER.update(queryProgress.timestamp.toLong)
-          source.FOO_COUNTER.mark( event.progress.numInputRows)
+          source.FOO_COUNTER.inc( event.progress.numInputRows)
         }
       }
     }
@@ -89,6 +87,7 @@ object SparkStreamingFromDirectory {
     println(a.status)
     println("status: " + a.recentProgress)
     a.awaitTermination()
+    spark.stop()
 
     /* groupDF.writeStream
        .format("console")

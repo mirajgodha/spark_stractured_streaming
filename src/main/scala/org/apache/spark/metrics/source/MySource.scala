@@ -8,6 +8,6 @@ class MySource extends Source {
   override val metricRegistry: MetricRegistry = new MetricRegistry
 
   val FOO: Histogram = metricRegistry.histogram(MetricRegistry.name("fooHistory"))
-  val FOO_COUNTER: Meter = metricRegistry.meter(MetricRegistry.name("numInputRows"))
-  val FOO_TIMER: Timer = metricRegistry.timer(MetricRegistry.name("numInputRowsTimer"))
+  val FOO_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("numInputRows"))
+//  val FOO_TIMER: Timer = metricRegistry.timer(MetricRegistry.name("numInputRowsTimer"))
 }
