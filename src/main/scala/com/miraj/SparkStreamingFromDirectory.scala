@@ -180,7 +180,9 @@ object SparkStreamingFromDirectory {
       .groupBy(window($"timestamp", "1 minutes", "1 minutes"), $"Zipcode").count()
     groupDF.printSchema()
 
-    var a = groupDF.writeStream.trigger(Trigger.Once).outputMode("append").format("json")
+    var a = groupDF.writeStream
+//.trigger(Trigger.Once)
+.outputMode("append").format("json")
       .option("checkpointLocation", "hdfs://siq02/tmp/miraj/checkpoint")
       .start("hdfs://siq02/tmp/miraj/output")
 

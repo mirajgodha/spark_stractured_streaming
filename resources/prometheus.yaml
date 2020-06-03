@@ -135,19 +135,33 @@ rules:
       executor_id: "$2"
 
   # These come from the application driver
-  # Emulate histograms for CodeGenerator
-  - pattern: "metrics<name=(.*)([0-9]+)\\.driver\\.MySource\\.(.*)><>Count"
-    name: spark_driver_mysource2_$3_count
+  # Emulate Spark Stractured Custom Metrics counters, except per sec rates
+  - pattern: "metrics<name=(.*)\\.driver\\.SiqSource\\.(.*)[^Second]><>Count"
+    name: spark_driver_siq_$2_count
     type: COUNTER
     labels:
       app_id: "$1"
-      abc: "$2"
-
 
   # These come from the application driver
-  # Emulate histograms for CodeGenerator
-  - pattern: "metrics<name=(.*)><>(.*)"
-    name: spark_driver_mysourceFoo1_$2
-    type: COUNTER
+  # Emulate Spark Stractured Custom Metrics per sec rates
+  - pattern: "metrics<name=(.*)\\.driver\\.SiqSource\\.(.*)(PerSecond)><>Count"
+    name: spark_driver_siq_$2_per_second_rate
+    type: GAUGE
+    labels:
+      app_id: "$1"
+
+  # These come from the application driver
+  # Emulate Spark Stractured Custom Metrics
+  - pattern: "metrics<name=(.*)\\.driver\\.SiqSource\\.(.*)><>Value"
+    name: spark_driver_siq_$2_meter
+    type: GAUGE
+    labels:
+      app_id: "$1"
+
+  # These come from the application driver
+  # Emulate Spark Stractured Custom Metrics Timers
+  - pattern: "metrics<name=(.*)\\.driver\\.SiqSource\\.(.*)><>Max"
+    name: spark_driver_siq_$2_time_ms
+    type: GAUGE
     labels:
       app_id: "$1"
