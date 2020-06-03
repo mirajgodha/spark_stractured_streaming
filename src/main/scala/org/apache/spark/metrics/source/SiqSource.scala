@@ -8,13 +8,13 @@ class SiqSource extends Source {
 
   override val metricRegistry: MetricRegistry = new MetricRegistry
 
-  val NUM_INPUT_ROWS_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("numInputRows"))
+  val NUM_INPUT_ROWS_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("num.Input.Rows"))
   val INPUT_ROWS_PER_SECOND_METER: Meter = metricRegistry.meter(MetricRegistry.name("inputRowsPerSecond"))
   val PROCESSED_ROWS_PER_SECOND_METER: Meter = metricRegistry.meter(MetricRegistry.name("processedRowsPerSecond"))
 
   //Duration ms counters
   val DURATION_MS_ADD_BATCH_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("DurationMsAddBatch"))
-  val DURATION_MS_GET_BATCH_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("DurationMGgetBatch"))
+  val DURATION_MS_GET_BATCH_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("DurationMsGetBatch"))
   val DURATION_MS_GET_OFFSET_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("DurationMsSetOffset"))
   val DURATION_MS_QUERY_PLANNING_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("DurationMsQueryPlanning"))
   val DURATION_MS_TRIGGER_EXECUTION_COUNTER: Counter = metricRegistry.counter(MetricRegistry.name("DurationMsTriggerExecution"))

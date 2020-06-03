@@ -135,7 +135,7 @@ rules:
       executor_id: "$2"
 
   # These come from the application driver
-  # Emulate Spark Stractured Custom Metrics counters, except per sec rates
+  # Emulate Spark Structured Streaming Custom Metrics - counters, except per sec rates
   - pattern: "metrics<name=(.*)\\.driver\\.SiqSource\\.(.*)[^Second]><>Count"
     name: spark_driver_siq_$2_count
     type: COUNTER
@@ -143,7 +143,7 @@ rules:
       app_id: "$1"
 
   # These come from the application driver
-  # Emulate Spark Stractured Custom Metrics per sec rates
+  # Emulate Spark Structured Streaming Custom Metrics - per sec rates
   - pattern: "metrics<name=(.*)\\.driver\\.SiqSource\\.(.*)(PerSecond)><>Count"
     name: spark_driver_siq_$2_per_second_rate
     type: GAUGE
@@ -151,7 +151,7 @@ rules:
       app_id: "$1"
 
   # These come from the application driver
-  # Emulate Spark Stractured Custom Metrics
+  # Emulate Spark Structured Streaming Custom Metrics - meters
   - pattern: "metrics<name=(.*)\\.driver\\.SiqSource\\.(.*)><>Value"
     name: spark_driver_siq_$2_meter
     type: GAUGE
@@ -159,7 +159,7 @@ rules:
       app_id: "$1"
 
   # These come from the application driver
-  # Emulate Spark Stractured Custom Metrics Timers
+  # Emulate Spark Structured Streaming Custom Metrics - Timers
   - pattern: "metrics<name=(.*)\\.driver\\.SiqSource\\.(.*)><>Max"
     name: spark_driver_siq_$2_time_ms
     type: GAUGE
