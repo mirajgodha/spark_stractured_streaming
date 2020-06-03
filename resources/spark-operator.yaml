@@ -26,6 +26,7 @@ spec:
       cores: 1
       coreLimit: "1200m"
       memory: "2g"
+      javaOptions: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8090 -Dcom.sun.management.jmxremote.rmi.port=8091 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
       configMaps:
         - name: prometheus-file
           path: /opt/spark/work-dir/config
@@ -40,6 +41,7 @@ spec:
       cores: 2
       instances: 1
       memory: "2g"
+      javaOptions: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8090 -Dcom.sun.management.jmxremote.rmi.port=8091 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
       configMaps:
         - name: prometheus-file
           path: /opt/spark/work-dir/config

@@ -133,3 +133,21 @@ rules:
     labels:
       app_id: "$1"
       executor_id: "$2"
+
+  # These come from the application driver
+  # Emulate histograms for CodeGenerator
+  - pattern: "metrics<name=(.*)([0-9]+)\\.driver\\.MySource\\.(.*)><>Count"
+    name: spark_driver_mysource2_$3_count
+    type: COUNTER
+    labels:
+      app_id: "$1"
+      abc: "$2"
+
+
+  # These come from the application driver
+  # Emulate histograms for CodeGenerator
+  - pattern: "metrics<name=(.*)><>(.*)"
+    name: spark_driver_mysourceFoo1_$2
+    type: COUNTER
+    labels:
+      app_id: "$1"
